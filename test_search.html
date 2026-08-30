@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Trainer Search Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select { padding: 8px; width: 300px; }
+        button { padding: 10px 20px; background: #007cba; color: white; border: none; cursor: pointer; }
+        button:hover { background: #005a87; }
+        .result { margin-top: 20px; padding: 15px; background: #f0f0f0; border-radius: 5px; }
+        .error { background: #ffebee; color: #c62828; }
+        .success { background: #e8f5e8; color: #2e7d32; }
+    </style>
+</head>
+<body>
+    <h1>Trainer Search Test Page</h1>
+    
+    <form method="GET" action="">
+        <input type="hidden" name="test" value="1">
+        
+        <div class="form-group">
+            <label for="specialty">Specialty:</label>
+            <select name="specialty" id="specialty">
+                <option value="">Any Specialty</option>
+                <option value="Strength Training">Strength Training</option>
+                <option value="Weight Loss">Weight Loss</option>
+                <option value="HIIT">HIIT</option>
+                <option value="Yoga">Yoga</option>
+                <option value="Bodybuilding">Bodybuilding</option>
+                <option value="Cardio">Cardio</option>
+                <option value="Pilates">Pilates</option>
+                <option value="Dance Fitness">Dance Fitness</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="location">Location:</label>
+            <input type="text" name="location" id="location" placeholder="e.g. any india city">
+        </div>
+        
+        <button type="submit">Test Search</button>
+    </form>
+    
+    <?php if (isset($_GET['test'])): ?>
+        <div class="result">
+            <h2>Search Results:</h2>
+            <?php
+            require_once 'includes/config.php';
+            require_once 'includes/session.php';
+            require_once 'crud/connect.php';
+            
+            $specialty = trim($_GET['specialty'] ?? '');
+            $location = trim($_GET['location'] ?? '');
+            
+            echo "<p><strong>Search Criteria:</strong></p>";
+            echo "<ul>";
+            echo "<li>Specialty: " . htmlspecialchars($specialty ?: 'None') . "</li>";
+            echo "<li>Location: " . htmlspecialchars($location ?: 'None') . "</li>";
+            echo "</ul>";
+            
+            try {
+                $conn = getConnection();
+                if ($conn) {
+                    echo "<p class='success'>✓ Database connection successful</p>";
+                    
+                    // Get all available trainers
+                    $sql = "SELECT * FROM trainers WHERE available = 1";
+                    $result = $conn->query($sql);
+                    
+                    if ($result) {
+                        $trainers = [];
+                        while ($row = $result->fetch_assoc()) {
+                            $trainers[] = $row;
+                        }
+                        
+                        echo "<p>Total available trainers: " . count($trainers) . "</p>";
+                        
+                        // Apply filters
+                        $filteredTrainers = $trainers;
+                        
+                        if ($specialty) {
+                            $filteredTrainers = array_filter($filteredTrainers, function($trainer) use ($specialty) {
+                                $specialties = json_decode($trainer['specialties'], true);
+                                if (is_array($specialties)) {
+                                    foreach ($specialties as $s) {
+                                        if (stripos($s, $specialty) !== false) {
+                                            return true;
+                                        }
+                                    }
+                                }
+                                return false;
+                            });
+                            $filteredTrainers = array_values($filteredTrainers);
+                        }
+                        
+                        if ($location) {
+                            $filteredTrainers = array_filter($filteredTrainers, function($trainer) use ($location) {
+                                return stripos($trainer['location'], $location) !== false;
+                            });
+                            $filteredTrainers = array_values($filteredTrainers);
+                        }
+                        
+                        echo "<p>Filtered trainers found: " . count($filteredTrainers) . "</p>";
+                        
+                        if (!empty($filteredTrainers)) {
+                            echo "<h3>Matching Trainers:</h3>";
+                            echo "<ul>";
+                            foreach ($filteredTrainers as $trainer) {
+                                echo "<li><strong>" . htmlspecialchars($trainer['name']) . "</strong> - " . htmlspecialchars($trainer['location']) . "</li>";
+                            }
+                            echo "</ul>";
+                            
+                            echo "<p><a href='?page=trainer&specialty=" . urlencode($specialty) . "&location=" . urlencode($location) . "'>View these trainers on the main page</a></p>";
+                        } else {
+                            echo "<p class='error'>No trainers found matching your criteria.</p>";
+                            echo "<p>Try different search terms or <a href='?page=trainer'>browse all trainers</a>.</p>";
+                        }
+                    } else {
+                        echo "<p class='error'>✗ Failed to query trainers: " . $conn->error . "</p>";
+                    }
+                } else {
+                    echo "<p class='error'>✗ Database connection failed</p>";
+                }
+            } catch (Exception $e) {
+                echo "<p class='error'>Error: " . htmlspecialchars($e->getMessage()) . "</p>";
+            }
+            ?>
+        </div>
+    <?php endif; ?>
+    
+    <div style="margin-top: 30px;">
+        <h2>Quick Links:</h2>
+        <ul>
+            <li><a href="?page=trainer">Main Trainers Page</a></li>
+            <li><a href="?page=home">Home Page</a></li>
+            <li><a href="debug_trainer_search.php">Debug Search Page</a></li>
+        </ul>
+    </div>
+</body>
+</html>

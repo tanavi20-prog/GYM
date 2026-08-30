@@ -1,0 +1,24 @@
+RewriteEngine On
+
+# Redirect old page requests to new routing system
+RewriteRule ^home\.php$ /?page=home [R=302,L]
+RewriteRule ^login\.php$ /?page=login [R=302,L]
+RewriteRule ^register\.php$ /?page=registration [R=302,L]
+RewriteRule ^registration\.php$ /?page=registration [R=302,L]
+RewriteRule ^trainer\.php$ /?page=trainer [R=302,L]
+RewriteRule ^trainers\.php$ /?page=trainer [R=302,L]
+RewriteRule ^community\.php$ /?page=community [R=302,L]
+RewriteRule ^plan\.php$ /?page=plan [R=302,L]
+RewriteRule ^plans\.php$ /?page=plan [R=302,L]
+RewriteRule ^tool\.php$ /?page=tool [R=302,L]
+RewriteRule ^tools\.php$ /?page=tool [R=302,L]
+RewriteRule ^dashboard\.php$ /?page=dashboard [R=302,L]
+RewriteRule ^profile\.php$ /?page=profile [R=302,L]
+
+# Allow direct access to existing files and folders
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule . - [L]
+
+# Clean URLs - optional (removes ?page= from URL)
+# RewriteRule ^([a-zA-Z0-9_-]+)/?$ /?page=$1 [QSA,L]

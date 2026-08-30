@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JavaScript Booking Test</title>
+</head>
+<body>
+    <h1>JavaScript Booking Function Test</h1>
+    
+    <button onclick="testBookFunction()">Test Book Function</button>
+    <button onclick="testDateFormatting()">Test Date Formatting</button>
+    <button onclick="testApiCall()">Test API Call Simulation</button>
+    
+    <div id="output" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc; background: #f9f9f9;"></div>
+
+    <script>
+        function showOutput(message, isError = false) {
+            const output = document.getElementById('output');
+            const div = document.createElement('div');
+            div.style.padding = '5px';
+            div.style.margin = '2px 0';
+            div.style.borderRadius = '3px';
+            div.style.backgroundColor = isError ? '#ffebee' : '#e8f5e8';
+            div.style.border = '1px solid ' + (isError ? '#ffcdd2' : '#c8e6c8');
+            div.textContent = message;
+            output.appendChild(div);
+            output.scrollTop = output.scrollHeight;
+        }
+        
+        function testBookFunction() {
+            showOutput('Testing bookSession function...');
+            
+            // Test the date formatting logic
+            try {
+                const now = new Date();
+                const tomorrow = new Date(now);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                tomorrow.setHours(10, 0, 0, 0);
+                
+                // Format date as YYYY-MM-DD HH:MM:SS
+                const formattedDate = tomorrow.toISOString().slice(0, 19).replace('T', ' ');
+                
+                showOutput('Current time: ' + now.toString());
+                showOutput('Tomorrow at 10am: ' + tomorrow.toString());
+                showOutput('Formatted date: ' + formattedDate);
+                
+                // Validate date format
+                const dateRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+                const isValid = dateRegex.test(formattedDate);
+                showOutput('Date format valid: ' + (isValid ? 'YES' : 'NO'));
+                
+                if (!isValid) {
+                    showOutput('ERROR: Date format is invalid!', true);
+                    return;
+                }
+                
+                showOutput('SUCCESS: Date formatting works correctly!');
+                
+            } catch (error) {
+                showOutput('ERROR in date formatting: ' + error.message, true);
+            }
+        }
+        
+        function testDateFormatting() {
+            showOutput('Testing various date formats...');
+            
+            // Test different date scenarios
+            const testDates = [
+                new Date(),
+                new Date('2024-12-25T15:30:00'),
+                new Date('invalid-date')
+            ];
+            
+            testDates.forEach((date, index) => {
+                try {
+                    if (isNaN(date.getTime())) {
+                        showOutput(`Test ${index + 1}: Invalid date detected`, true);
+                        return;
+                    }
+                    
+                    const formatted = date.toISOString().slice(0, 19).replace('T', ' ');
+                    const regex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+                    const valid = regex.test(formatted);
+                    
+                    showOutput(`Test ${index + 1}: ${formatted} - Valid: ${valid ? 'YES' : 'NO'}`);
+                } catch (error) {
+                    showOutput(`Test ${index + 1}: Error - ${error.message}`, true);
+                }
+            });
+        }
+        
+        function testApiCall() {
+            showOutput('Testing API call simulation...');
+            
+            // Simulate the data that would be sent
+            const testData = {
+                trainer_id: 1,
+                scheduled_date: '2024-12-25 10:00:00',
+                duration_minutes: 60,
+                notes: 'Test booking'
+            };
+            
+            showOutput('Data to send:');
+            Object.keys(testData).forEach(key => {
+                showOutput(`  ${key}: ${testData[key]}`);
+            });
+            
+            // Validate the data
+            if (!testData.trainer_id) {
+                showOutput('ERROR: Missing trainer_id', true);
+                return;
+            }
+            
+            if (!testData.scheduled_date) {
+                showOutput('ERROR: Missing scheduled_date', true);
+                return;
+            }
+            
+            // Validate date format
+            const dateRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+            if (!dateRegex.test(testData.scheduled_date)) {
+                showOutput('ERROR: Invalid date format: ' + testData.scheduled_date, true);
+                return;
+            }
+            
+            showOutput('SUCCESS: Data validation passed!');
+            showOutput('In real scenario, this would call: /api/trainer_booking.php?action=book_session');
+        }
+        
+        // Test the actual notification function
+        function showNotification(message, type = 'info') {
+            showOutput('Notification: ' + message + ' (Type: ' + type + ')');
+        }
+    </script>
+</body>
+</html>

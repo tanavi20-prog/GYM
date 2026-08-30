@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Progress Tracker</title>
+    <style>
+        /* CSS Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #28a745;        /* Green primary color */
+            --primary-hover: #218838;  /* Darker green for hover */
+            --primary-light: #d4edda;  /* Light green for backgrounds */
+            --secondary: #6c757d;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --muted: #6c757d;
+            --border: #dee2e6;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%); /* Green gradient */
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Main Content */
+        .main-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Grid Layout */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        /* Card Styles */
+        .card {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(40, 167, 69, 0.2); /* Green shadow */
+        }
+
+        .card h2 {
+            color: var(--primary); /* Green header */
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary-light);
+        }
+
+        .card h3 {
+            color: var(--dark);
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 1rem;
+        }
+
+        .input, .select {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: #fff;
+        }
+
+        .input:focus, .select:focus {
+            outline: none;
+            border-color: var(--primary); /* Green border on focus */
+            box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.1); /* Green focus ring */
+            transform: translateY(-2px);
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-hover)); /* Green gradient */
+            color: white;
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3); /* Green shadow */
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4); /* Green hover shadow */
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary); /* Green border */
+            color: var(--primary); /* Green text */
+        }
+
+        .btn-outline:hover {
+            background: var(--primary); /* Green background */
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--muted);
+            padding: 10px 15px;
+        }
+
+        .btn-ghost:hover {
+            background: var(--light);
+            color: var(--dark);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger), #c82333);
+            color: white;
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+        }
+
+        /* Progress Styles */
+        .progress-container {
+            width: 100%;
+            height: 12px;
+            background: var(--light);
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-hover)); /* Green progress */
+            border-radius: 6px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shine 2s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Result Card */
+        .result-card {
+            background: linear-gradient(135deg, var(--primary-light), #e9f5ee); /* Light green background */
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            text-align: center;
+            border: 1px solid var(--primary-light);
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            text-align: center;
+        }
+
+        .result-item h3 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .result-item .primary { color: var(--primary); } /* Green text */
+        .result-item .accent { color: #20c997; } /* Teal accent */
+
+        .result-label {
+            font-size: 1.1rem;
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-top: 12px;
+        }
+
+        .badge.underweight { background: #d1ecf1; color: #0c5460; }
+        .badge.normal { background: var(--primary-light); color: #155724; } /* Green badge */
+        .badge.overweight { background: #fff3cd; color: #856404; }
+        .badge.obese { background: #f8d7da; color: #721c24; }
+
+        /* Workout Form */
+        .workout-form {
+            background: linear-gradient(135deg, var(--primary-light), #e9f5ee); /* Light green form background */
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 25px;
+            background: linear-gradient(135deg, white, var(--primary-light)); /* Green-tinged background */
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+            border: 1px solid var(--primary-light);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.2); /* Green shadow */
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .stat-value.primary { color: var(--primary); } /* Green stat */
+        .stat-value.accent { color: #20c997; } /* Teal accent */
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        /* Workout List */
+        .recent-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .recent-header h3 {
+            margin: 0;
+        }
+
+        .workout-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: var(--primary-light); /* Light green background */
+            border-radius: 12px;
+            margin-bottom: 15px;
+            transition: var(--transition);
+            border-left: 4px solid var(--primary); /* Green left border */
+        }
+
+        .workout-item:hover {
+            background: #d1e7dd; /* Slightly darker green */
+            transform: translateX(8px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.2); /* Green shadow */
+        }
+
+        .workout-details h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .workout-meta {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .workout-stats {
+            text-align: right;
+        }
+
+        .workout-stats .duration {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .workout-stats .intensity {
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 15px;
+        }
+
+        .intensity-low { background: var(--primary-light); color: #155724; } /* Green */
+        .intensity-moderate { background: #cce5ff; color: #004085; }
+        .intensity-high { background: #fff3cd; color: #856404; }
+        .intensity-very-high { background: #f8d7da; color: #721c24; }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 8px 15px;
+            border-radius: 6px;
+            transition: var(--transition);
+            margin-top: 10px;
+        }
+
+        .delete-btn:hover {
+            background: var(--danger);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        /* Chart Container */
+        .chart-container {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, var(--primary-light), #e9f5ee); /* Light green */
+            border-radius: 15px;
+        }
+
+        .chart-container h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--primary); /* Green header */
+        }
+
+        #progressChart {
+            width: 100%;
+            height: 300px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Feedback Messages */
+        .feedback {
+            padding: 18px 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-weight: 500;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .feedback.success {
+            background: linear-gradient(135deg, var(--primary-light), #c3e6cb); /* Green success */
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .feedback.error {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Loading States */
+        .loading-state {
+            text-align: center;
+            padding: 50px;
+            color: var(--muted);
+        }
+
+        .loading-state svg {
+            margin-bottom: 20px;
+            opacity: 0.7;
+            animation: pulse 2s infinite;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .tools-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .result-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .main-content {
+                padding: 25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Professional Fitness Tools</h1>
+            <p>Track your progress with beautifully designed tools and real-time analytics</p>
+        </div>
+        
+        <div class="main-content">
+            <div class="tools-grid">
+                <!-- Left Column: Calculator -->
+                <div class="card">
+                    <h2>🧮 BMI & Calorie Calculator</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Weight (kg)</label>
+                            <input type="number" id="calc-weight" class="input" placeholder="65" min="20" max="300" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Height (cm)</label>
+                            <input type="number" id="calc-height" class="input" placeholder="170" min="100" max="250" step="0.1">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Age</label>
+                            <input type="number" id="calc-age" class="input" placeholder="25" min="13" max="100">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Gender</label>
+                            <select id="calc-gender" class="select">
+                                <option value="">Select gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Activity Level</label>
+                        <select id="calc-activity" class="select">
+                            <option value="1.2">Sedentary (little/no exercise)</option>
+                            <option value="1.375">Lightly active (1-3 days/week)</option>
+                            <option value="1.55">Moderately active (3-5 days/week)</option>
+                            <option value="1.725">Very active (6-7 days/week)</option>
+                            <option value="1.9">Extra active (2x/day, intense)</option>
+                        </select>
+                    </div>
+                    
+                    <button onclick="calculate()" class="btn btn-primary" style="width: 100%;">
+                        Calculate My Stats
+                    </button>
+                    
+                    <div id="results" style="display: none;" class="fade-in">
+                        <div class="result-card">
+                            <div class="result-grid">
+                                <div class="result-item">
+                                    <h3 class="primary" id="bmi-result">-</h3>
+                                    <div class="result-label">BMI Score</div>
+                                    <div id="bmi-category" class="badge">-</div>
+                                </div>
+                                <div class="result-item">
+                                    <h3 class="accent" id="calories-result">-</h3>
+                                    <div class="result-label">Daily Calories</div>
+                                    <div style="font-size: 0.9rem; color: var(--muted); margin-top: 8px;">
+                                        to maintain weight
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 25px; padding: 25px; background: var(--primary-light); border-radius: 12px;">
+                            <h3 style="margin-bottom: 20px; color: var(--primary); text-align: center;">🎯 Weight Goals</h3>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; text-align: center; font-size: 1rem;">
+                                <div>
+                                    <strong>Lose 0.5kg/week</strong><br>
+                                    <span id="lose-half" style="font-size: 1.2rem; font-weight: 700; color: var(--primary);">-</span> cal/day
+                                </div>
+                                <div>
+                                    <strong>Lose 1kg/week</strong><br>
+                                    <span id="lose-one" style="font-size: 1.2rem; font-weight: 700; color: var(--danger);">-</span> cal/day
+                                </div>
+                                <div>
+                                    <strong>Gain 0.5kg/week</strong><br>
+                                    <span id="gain-half" style="font-size: 1.2rem; font-weight: 700; color: var(--success);">-</span> cal/day
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Column: Progress Tracker -->
+                <div class="card">
+                    <h2>📊 Real-time Progress Tracker</h2>
+                    
+                    <!-- Log Workout Form -->
+                    <div class="workout-form">
+                        <h3>💪 Log New Workout</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Exercise Name</label>
+                                <input type="text" id="workout-name" class="input" placeholder="e.g., Push-ups, Running">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Duration (min)</label>
+                                <input type="number" id="workout-duration" class="input" placeholder="30" min="1">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Intensity</label>
+                                <select id="workout-intensity" class="select">
+                                    <option value="">Select intensity</option>
+                                    <option value="low">Low</option>
+                                    <option value="moderate">Moderate</option>
+                                    <option value="high">High</option>
+                                    <option value="very-high">Very High</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Calories (optional)</label>
+                                <input type="number" id="calories-burned" class="input" placeholder="200" min="1">
+                            </div>
+                        </div>
+                        
+                        <button onclick="logWorkout()" class="btn btn-primary" style="width: 100%;">
+                            🚀 Log Workout
+                        </button>
+                        <div id="workout-feedback" class="feedback"></div>
+                    </div>
+                    
+                    <!-- Weekly Stats -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value primary" id="week-workouts">0</div>
+                            <div class="stat-label">Workouts This Week</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value accent" id="week-minutes">0</div>
+                            <div class="stat-label">Total Minutes</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Workouts -->
+                    <div style="margin-top: 25px;">
+                        <div class="recent-header">
+                            <h3>📋 Recent Activity</h3>
+                            <button class="btn btn-ghost" onclick="clearWorkouts()">Clear All</button>
+                        </div>
+                        
+                        <div id="workout-list">
+                            <div class="loading-state">
+                                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                    <polyline points="22,4 12,14.01 9,11.01"/>
+                                </svg>
+                                <h3>Loading your progress...</h3>
+                                <p>Real-time updates coming soon!</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Progress Chart -->
+                    <div class="chart-container">
+                        <h3>📈 Progress Visualization</h3>
+                        <canvas id="progressChart" width="500" height="250"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Calculator functionality
+        function calculate() {
+            const weight = parseFloat(document.getElementById('calc-weight').value);
+            const height = parseFloat(document.getElementById('calc-height').value);
+            const age = parseInt(document.getElementById('calc-age').value);
+            const gender = document.getElementById('calc-gender').value;
+            const activity = parseFloat(document.getElementById('calc-activity').value);
+            
+            if (!weight || !height || !age || !gender || !activity) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            // Calculate BMI
+            const heightM = height / 100;
+            const bmi = weight / (heightM * heightM);
+            
+            // BMI Category
+            let bmiCategory = '';
+            let bmiClass = '';
+            if (bmi < 18.5) {
+                bmiCategory = 'Underweight';
+                bmiClass = 'underweight';
+            } else if (bmi < 25) {
+                bmiCategory = 'Normal';
+                bmiClass = 'normal';
+            } else if (bmi < 30) {
+                bmiCategory = 'Overweight';
+                bmiClass = 'overweight';
+            } else {
+                bmiCategory = 'Obese';
+                bmiClass = 'obese';
+            }
+            
+            // Calculate BMR
+            let bmr;
+            if (gender === 'male') {
+                bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
+            } else {
+                bmr = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
+            }
+            
+            // Calculate TDEE
+            const tdee = bmr * activity;
+            
+            // Display results
+            document.getElementById('bmi-result').textContent = bmi.toFixed(1);
+            const bmiCategoryElement = document.getElementById('bmi-category');
+            bmiCategoryElement.textContent = bmiCategory;
+            bmiCategoryElement.className = 'badge ' + bmiClass;
+            document.getElementById('calories-result').textContent = Math.round(tdee);
+            
+            // Weight goals
+            document.getElementById('lose-half').textContent = Math.round(tdee - 500);
+            document.getElementById('lose-one').textContent = Math.round(tdee - 1000);
+            document.getElementById('gain-half').textContent = Math.round(tdee + 500);
+            
+            document.getElementById('results').style.display = 'block';
+        }
+
+        // Progress tracking functions (simplified for demo)
+        function logWorkout() {
+            const name = document.getElementById('workout-name').value;
+            const duration = parseInt(document.getElementById('workout-duration').value);
+            const intensity = document.getElementById('workout-intensity').value;
+            
+            if (!name || !duration || !intensity) {
+                showFeedback('workout-feedback', 'Please fill in all required fields', 'error');
+                return;
+            }
+            
+            // Simulate successful logging
+            showFeedback('workout-feedback', '🎉 Workout logged successfully!', 'success');
+            
+            // Clear form
+            document.getElementById('workout-name').value = '';
+            document.getElementById('workout-duration').value = '';
+            document.getElementById('workout-intensity').value = '';
+            document.getElementById('calories-burned').value = '';
+            
+            // Update display
+            updateWorkoutList();
+        }
+
+        function updateWorkoutList() {
+            const workoutList = document.getElementById('workout-list');
+            workoutList.innerHTML = `
+                <div class="workout-item fade-in">
+                    <div class="workout-details">
+                        <h4>Sample Workout</h4>
+                        <div class="workout-meta">Today at 2:30 PM</div>
+                    </div>
+                    <div class="workout-stats">
+                        <div class="duration">30 min</div>
+                        <div class="intensity intensity-low">Low</div>
+                        <button class="delete-btn">Delete</button>
+                    </div>
+                </div>
+                <div class="workout-item fade-in">
+                    <div class="workout-details">
+                        <h4>Running Session</h4>
+                        <div class="workout-meta">Yesterday at 6:15 AM</div>
+                    </div>
+                    <div class="workout-stats">
+                        <div class="duration">45 min</div>
+                        <div class="intensity intensity-moderate">Moderate</div>
+                        <button class="delete-btn">Delete</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function clearWorkouts() {
+            if (confirm('Clear all workout data?')) {
+                document.getElementById('workout-list').innerHTML = `
+                    <div class="loading-state">
+                        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 20V10M12 20V4M6 20v-6"/>
+                        </svg>
+                        <h3>No workouts logged yet</h3>
+                        <p>Start tracking your fitness journey!</p>
+                    </div>
+                `;
+            }
+        }
+
+        function showFeedback(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = 'feedback ' + type;
+            element.style.display = 'block';
+            
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 3000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateWorkoutList();
+        });
+    </script>
+</body>
+</html>

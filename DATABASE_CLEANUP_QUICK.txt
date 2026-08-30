@@ -1,0 +1,84 @@
+================================================================================
+                    DATABASE CLEANUP - QUICK GUIDE
+                    Fix: Admin Panel Showing Old Tables
+================================================================================
+
+PROBLEM:
+--------
+Your admin panel shows OLD duplicate tables from previous schemas:
+  ❌ workout_plans, workout_sessions, trainer_sessions
+  ❌ community_posts, community_comments, progress_tracking
+
+SOLUTION:
+---------
+Import CLEAN_DATABASE.sql to get ONLY these 7 correct tables:
+  ✅ users, trainers, plans, sessions, community
+  ✅ video_categories, videos
+
+
+QUICK FIX (3 Steps):
+--------------------
+
+1. Open phpMyAdmin
+   http://localhost/phpmyadmin
+
+2. Drop Old Database
+   - Click "fitness_db" → Operations tab
+   - Click "Drop the database (DROP)"
+   - Confirm
+
+3. Import Clean Database
+   - Click "Import" tab
+   - Choose file: E:\wamp64\www\gymmm\CLEAN_DATABASE.sql
+   - Click "Go"
+   - Done!
+
+
+VERIFY SUCCESS:
+---------------
+✓ Admin panel shows exactly 7 tables
+✓ No old tables (workout_plans, etc.)
+✓ Sample videos loaded (10 videos)
+✓ Sample trainers loaded (4 trainers)
+✓ Website works without errors
+
+
+ALTERNATIVE (Keep Existing Data):
+----------------------------------
+Use Admin Panel SQL Query to drop only old tables:
+
+DROP TABLE IF EXISTS community_comments;
+DROP TABLE IF EXISTS community_posts;
+DROP TABLE IF EXISTS progress_tracking;
+DROP TABLE IF EXISTS trainer_sessions;
+DROP TABLE IF EXISTS workout_sessions;
+DROP TABLE IF EXISTS workout_plans;
+
+
+FILES CREATED:
+--------------
+✓ CLEAN_DATABASE.sql                  - Clean database schema
+✓ DATABASE_CLEANUP_INSTRUCTIONS.md    - Detailed guide
+✓ DATABASE_CLEANUP_QUICK.txt          - This file
+
+
+WHAT YOU'LL GET:
+----------------
+✓ Clean 7-table structure
+✓ 10 sample workout videos
+✓ 8 video categories (Cardio, Yoga, HIIT, etc.)
+✓ 4 sample trainers
+✓ Organized admin panel
+✓ No duplicate tables
+
+
+NOTE:
+-----
+⚠ This will RESET all data (users, posts, etc.)
+⚠ Export users table first if you want to keep accounts
+⚠ Sample data will be added automatically
+
+
+================================================================================
+Ready? Go to: http://localhost/phpmyadmin and import CLEAN_DATABASE.sql
+================================================================================

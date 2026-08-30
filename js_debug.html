@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JavaScript Debug Test</title>
+</head>
+<body>
+    <h1>JavaScript Debug Test</h1>
+    <button onclick="testBooking()">Test Booking Function</button>
+    <div id="output"></div>
+
+    <script>
+        function showNotification(message, type = 'info') {
+            const output = document.getElementById('output');
+            output.innerHTML += `<div style="padding: 10px; margin: 5px; background: ${type === 'error' ? '#f8d7da' : '#d4edda'}; border: 1px solid ${type === 'error' ? '#f5c6cb' : '#c3e6cb'}; border-radius: 4px;">
+                ${message}
+            </div>`;
+        }
+
+        function testBooking() {
+            // Test the date formatting
+            const now = new Date();
+            const tomorrow = new Date(now);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            tomorrow.setHours(10, 0, 0, 0);
+            
+            // Format date as YYYY-MM-DD HH:MM:SS
+            const formattedDate = tomorrow.toISOString().slice(0, 19).replace('T', ' ');
+            
+            // Validate date format
+            const dateRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+            
+            showNotification(`Current date: ${now.toISOString()}`);
+            showNotification(`Formatted date: ${formattedDate}`);
+            showNotification(`Valid format: ${dateRegex.test(formattedDate) ? 'Yes' : 'No'}`);
+            
+            // Test API call simulation
+            showNotification('Testing API call...', 'info');
+            
+            // Simulate the fetch call
+            setTimeout(() => {
+                showNotification('This is a simulation. In real scenario, this would call the API.', 'info');
+                showNotification('If you see this message but no booking appears, check the browser console (F12) for errors.', 'info');
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
